@@ -7,9 +7,11 @@ import {
   Transition,
 } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
-import { getProjects } from "@/api/ProjectAPI";
-import { useQuery } from "@tanstack/react-query";
+import { deleteProject, getProjects } from "@/api/ProjectAPI";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import { Project } from "../types";
+import { toast } from "react-toastify";
 
 export default function DashboardView() {
   const { data, isLoading } = useQuery({
@@ -17,7 +19,24 @@ export default function DashboardView() {
     queryFn: getProjects,
   });
 
-  if (isLoading) return "Loading";
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: deleteProject,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      toast.success(data);
+    },
+  });
+
+  const getIdToDelete = (id: Project["_id"]) => {
+    mutate(id);
+  };
+
+  if (isLoading) return "Loading...";
 
   if (data)
     return (
@@ -55,7 +74,7 @@ export default function DashboardView() {
                       {project.projectName}
                     </Link>
                     <p className="text-sm text-gray-400">
-                      Cliente: {project.clientName}
+                      Client: {project.clientName}
                     </p>
                     <p className="text-sm text-gray-400">
                       {project.description}
@@ -91,7 +110,7 @@ export default function DashboardView() {
                         </MenuItem>
                         <MenuItem>
                           <Link
-                            to={``}
+                            to={`/projects/${project._id}/edit`}
                             className="block px-3 py-1 text-sm leading-6 text-gray-900"
                           >
                             Editar Proyecto
@@ -101,7 +120,9 @@ export default function DashboardView() {
                           <button
                             type="button"
                             className="block px-3 py-1 text-sm leading-6 text-red-500"
-                            onClick={() => {}}
+                            onClick={() => {
+                              getIdToDelete(project._id);
+                            }}
                           >
                             Eliminar Proyecto
                           </button>
