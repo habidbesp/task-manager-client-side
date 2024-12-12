@@ -16,6 +16,9 @@ export const dashboardProjectSchema = z.array(
     description: true,
   })
 );
+
+export const editProjectSchema = projectSchema.extend({});
+
 export type Project = z.infer<typeof projectSchema>;
 export type ProjectFormData = Pick<
   Project,
