@@ -1,5 +1,25 @@
 import { z } from "zod";
 
+/** Task */
+export const taskStatusSchema = z.enum([
+  "pending",
+  "onHold",
+  "inProgress",
+  "underReview",
+  "completed",
+]);
+
+export const taskSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  project: z.string(),
+  status: taskStatusSchema,
+});
+
+export type Task = z.infer<typeof taskSchema>;
+export type TaskFormData = Pick<Task, "name" | "description">;
+
 /** Projects */
 export const projectSchema = z.object({
   _id: z.string(),
@@ -17,7 +37,9 @@ export const dashboardProjectSchema = z.array(
   })
 );
 
-export const editProjectSchema = projectSchema.extend({});
+export const editProjectSchema = projectSchema.extend({
+  tasks: z.array(taskSchema),
+});
 
 export type Project = z.infer<typeof projectSchema>;
 export type ProjectFormData = Pick<
