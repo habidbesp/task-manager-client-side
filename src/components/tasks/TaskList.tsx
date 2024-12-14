@@ -26,11 +26,11 @@ const statusTranslations: { [key: string]: string } = {
 };
 
 const colorTranslations: { [key: string]: string } = {
-  pending: "orange",
-  onHold: "gray",
-  inProgress: "blue",
-  underReview: "purple",
-  completed: "green",
+  pending: "border-t-orange-500",
+  onHold: "border-t-gray-500",
+  inProgress: "border-t-blue-500",
+  underReview: "border-t-purple-500",
+  completed: "border-t-green-500",
 };
 
 export default function TaskList({ tasks }: TaskLisProps) {
@@ -48,7 +48,7 @@ export default function TaskList({ tasks }: TaskLisProps) {
         {Object.entries(groupedTasks).map(([status, tasks]) => (
           <div key={status} className="min-w-[300px] 2xl:min-w-0 2xl:w-1/5">
             <h3
-              className={`capitalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 border-t-${colorTranslations[status]}-500`}
+              className={`capitalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${colorTranslations[status]}`}
             >
               {statusTranslations[status]}
             </h3>
