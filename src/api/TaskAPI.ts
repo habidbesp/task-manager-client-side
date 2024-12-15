@@ -12,7 +12,10 @@ export async function createTask(
 ) {
   const { projectId, formData } = taskParams;
   try {
-    const { data } = await api.post(`/projects/${projectId}/tasks`, formData);
+    const { data } = await api.post<string>(
+      `/projects/${projectId}/tasks`,
+      formData
+    );
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -43,9 +46,24 @@ export async function updateTask(
 ) {
   const { projectId, taskId, formData } = taskParams;
   try {
-    const { data } = await api.put(
+    const { data } = await api.put<string>(
       `/projects/${projectId}/tasks/${taskId}`,
       formData
+    );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+export async function deleteTask(
+  taskParams: Pick<TaskAPI, "projectId" | "taskId">
+) {
+  const { projectId, taskId } = taskParams;
+  try {
+    const { data } = await api.delete<string>(
+      `/projects/${projectId}/tasks/${taskId}`
     );
     return data;
   } catch (error) {
