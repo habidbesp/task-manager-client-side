@@ -23,7 +23,8 @@ export default function AddTaskModal() {
   const modalTask = Boolean(queryParams.get("newTask"));
 
   /** Get projetId */
-  const { projectId } = useParams();
+  const params = useParams();
+  const projectId = params.projectId!;
 
   const initialValues: TaskFormData = {
     name: "",
@@ -45,7 +46,7 @@ export default function AddTaskModal() {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
       toast.success(data);
       reset();
       navigate(location.pathname, { replace: true });
@@ -53,10 +54,8 @@ export default function AddTaskModal() {
   });
 
   const handleCreateTask = (formData: TaskFormData) => {
-    if (projectId) {
-      const data = { projectId, formData };
-      mutate(data);
-    }
+    const data = { projectId, formData };
+    mutate(data);
   };
 
   return (
@@ -108,7 +107,7 @@ export default function AddTaskModal() {
                     <TaskForm register={register} errors={errors} />
                     <input
                       type="submit"
-                      value="Update Project"
+                      value="Add Project"
                       className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors"
                     />
                   </form>

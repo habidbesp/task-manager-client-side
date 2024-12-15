@@ -2,28 +2,24 @@ import { getProjectById } from "@/api/ProjectAPI";
 import AddTaskModal from "@/components/tasks/AddTaskModal";
 import EditTaskData from "@/components/tasks/EditTaskData";
 import TaskList from "@/components/tasks/TaskList";
+import TaskModalDetails from "@/components/tasks/TaskModalDetails";
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 export default function ProjectDetailsView() {
   const navigate = useNavigate();
-  const { projectId } = useParams();
+  const params = useParams();
+  const projectId = params.projectId!;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["editProject", projectId],
-    queryFn: async () => {
-      if (projectId) {
-        const data = await getProjectById(projectId);
-        return data;
-      }
-    },
+    queryKey: ["project", projectId],
+    queryFn: () => getProjectById(projectId),
     retry: false,
   });
 
   if (isLoading) return <div>"Loading..."</div>;
   if (isError) return <Navigate to="/404" />;
-
-  if (data && projectId)
+  if (data)
     return (
       <>
         <h1 className="text-5xl font-black">{data.projectName}</h1>
@@ -43,6 +39,7 @@ export default function ProjectDetailsView() {
         <TaskList tasks={data.tasks} />
         <AddTaskModal />
         <EditTaskData />
+        <TaskModalDetails />
       </>
     );
 }
