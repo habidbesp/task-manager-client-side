@@ -20,6 +20,12 @@ export type UserRegistrationForm = Pick<
 >;
 export type RequestConfirmationCodeForm = Pick<Auth, "email">;
 export type ConfirmToken = Pick<Auth, "token">;
+export type ResetPasswordForm = Pick<Auth, "email">;
+export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
+export type SetPassword = Pick<
+  Auth,
+  "password" | "password_confirmation" | "token"
+>;
 
 /** Task */
 export const taskStatusSchema = z.enum([

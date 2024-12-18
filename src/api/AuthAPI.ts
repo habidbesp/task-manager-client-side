@@ -3,13 +3,14 @@ import { isAxiosError } from "axios";
 import {
   ConfirmToken,
   RequestConfirmationCodeForm,
+  ResetPasswordForm,
+  SetPassword,
   UserLoginForm,
   UserRegistrationForm,
 } from "@/types/index";
 
 type AuthAPI = {
   formData: UserRegistrationForm;
-  token: ConfirmToken["token"];
 };
 
 export async function createAccount(authParams: Pick<AuthAPI, "formData">) {
@@ -24,7 +25,7 @@ export async function createAccount(authParams: Pick<AuthAPI, "formData">) {
   }
 }
 
-export async function confirmAccount(authParams: Pick<AuthAPI, "token">) {
+export async function confirmAccount(authParams: ConfirmToken) {
   const { token } = authParams;
   try {
     const { data } = await api.post<string>("auth/confirm-account", { token });
@@ -54,6 +55,50 @@ export async function authenticateUser(authParams: UserLoginForm) {
     const { data } = await api.post<string>("auth/login", {
       email,
       password,
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function resetPasswordForm(authParams: ResetPasswordForm) {
+  const { email } = authParams;
+  try {
+    const { data } = await api.post<string>("auth/reset-password", {
+      email,
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function validateToken(authParams: ConfirmToken) {
+  const { token } = authParams;
+  try {
+    const { data } = await api.post<string>("auth/validate-token", {
+      token,
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function setNewPassword(authParams: SetPassword) {
+  const { password, password_confirmation, token } = authParams;
+
+  try {
+    const { data } = await api.post<string>(`auth/update-password/${token}`, {
+      password,
+      password_confirmation,
     });
     return data;
   } catch (error) {
