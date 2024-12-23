@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import api from "@/lib/axios";
 import { isAxiosError } from "axios";
 import {
   ConfirmToken,
@@ -7,6 +7,7 @@ import {
   SetPassword,
   UserLoginForm,
   UserRegistrationForm,
+  userSchema,
 } from "@/types/index";
 
 type AuthAPI = {
@@ -56,6 +57,9 @@ export async function authenticateUser(authParams: UserLoginForm) {
       email,
       password,
     });
+
+    localStorage.setItem("AUTH_TOKEN", data);
+
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -101,6 +105,20 @@ export async function setNewPassword(authParams: SetPassword) {
       password_confirmation,
     });
     return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function getUser() {
+  try {
+    const { data } = await api("/auth/user");
+    const response = userSchema.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);

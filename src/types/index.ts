@@ -2,7 +2,6 @@ import { z } from "zod";
 
 /** Auth User */
 export const authSchema = z.object({
-  _id: z.string(),
   name: z.string(),
   email: z.string(),
   password: z.string(),
@@ -26,6 +25,13 @@ export type SetPassword = Pick<
   Auth,
   "password" | "password_confirmation" | "token"
 >;
+
+/** Users */
+export const userSchema = authSchema
+  .pick({ name: true, email: true })
+  .extend({ _id: z.string() });
+
+export type User = z.infer<typeof userSchema>;
 
 /** Task */
 export const taskStatusSchema = z.enum([
@@ -57,6 +63,7 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
+  manager: z.string(),
 });
 
 export const dashboardProjectSchema = z.array(
@@ -65,6 +72,7 @@ export const dashboardProjectSchema = z.array(
     projectName: true,
     clientName: true,
     description: true,
+    manager: true,
   })
 );
 
