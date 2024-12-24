@@ -85,3 +85,13 @@ export type ProjectFormData = Pick<
   Project,
   "projectName" | "clientName" | "description"
 >;
+
+/** Team */
+export const teamMemberSchema = userSchema.pick({
+  _id: true,
+  name: true,
+  email: true,
+});
+
+export type TeamMember = z.infer<typeof teamMemberSchema>;
+export type TeamMemberForm = Pick<TeamMember, "email">;

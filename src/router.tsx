@@ -11,6 +11,7 @@ import ConfirmAccountView from "./views/auth/ConfirmAccountView";
 import RequestNewTokenView from "./views/auth/RequestNewTokenView";
 import ResetPasswordView from "./views/auth/ResetPasswordView";
 import NewPasswordView from "./views/auth/NewPasswordView";
+import ProjectTeam from "./views/projects/ProjectTeam";
 
 export default function Router() {
   return (
@@ -24,7 +25,9 @@ export default function Router() {
             path="/projects/:projectId/edit"
             element={<EditProjectView />}
           />
+          <Route path="/projects/:projectId/team" element={<ProjectTeam />} />
         </Route>
+
         <Route element={<AuthLayout />}>
           <Route path="/auth/login" element={<LoginView />} />
           <Route path="/auth/register" element={<RegisterView />} />
