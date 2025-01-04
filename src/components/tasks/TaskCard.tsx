@@ -15,8 +15,9 @@ import { toast } from "react-toastify";
 
 type TaskCardParams = {
   task: Task;
+  canEdit: boolean;
 };
-export default function TaskCard({ task }: TaskCardParams) {
+export default function TaskCard({ task, canEdit }: TaskCardParams) {
   const navigate = useNavigate();
 
   const params = useParams();
@@ -46,6 +47,7 @@ export default function TaskCard({ task }: TaskCardParams) {
         <button
           type="button"
           className="text-xl font-bold text-slate-600 text-left"
+          onClick={() => navigate(location.pathname + `?viewTask=${task._id}`)}
         >
           {task.name}
         </button>
@@ -78,27 +80,32 @@ export default function TaskCard({ task }: TaskCardParams) {
                   View Task
                 </button>
               </MenuItem>
-              <MenuItem>
-                <button
-                  type="button"
-                  className="block px-3 py-1 text-sm leading-6 text-gray-900"
-                  onClick={() =>
-                    navigate(location.pathname + `?editTask=${task._id}`)
-                  }
-                >
-                  Edit Task
-                </button>
-              </MenuItem>
 
-              <MenuItem>
-                <button
-                  type="button"
-                  className="block px-3 py-1 text-sm leading-6 text-red-500"
-                  onClick={handleDelete}
-                >
-                  Delete Task
-                </button>
-              </MenuItem>
+              {canEdit && (
+                <>
+                  <MenuItem>
+                    <button
+                      type="button"
+                      className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                      onClick={() =>
+                        navigate(location.pathname + `?editTask=${task._id}`)
+                      }
+                    >
+                      Edit Task
+                    </button>
+                  </MenuItem>
+
+                  <MenuItem>
+                    <button
+                      type="button"
+                      className="block px-3 py-1 text-sm leading-6 text-red-500"
+                      onClick={handleDelete}
+                    >
+                      Delete Task
+                    </button>
+                  </MenuItem>
+                </>
+              )}
             </MenuItems>
           </Transition>
         </Menu>

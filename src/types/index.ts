@@ -63,7 +63,7 @@ export const projectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
-  manager: z.string(),
+  manager: z.string(userSchema.pick({ _id: true })),
 });
 
 export const dashboardProjectSchema = z.array(

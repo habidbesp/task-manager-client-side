@@ -42,11 +42,22 @@ export default function Router() {
           <Route path="/auth/reset-password" element={<ResetPasswordView />} />
           <Route path="/auth/new-password" element={<NewPasswordView />} />
         </Route>
-        <Route
+
+        {/* <Route
           path="/404"
           element={
             <div>
-              <p>Oups Rout not found, you are lost 😕</p>
+              <p>Oups Route not found, you are lost 😕</p>
+              <Link to="/">Back to home 🏠</Link>
+            </div>
+          }
+        /> */}
+
+        <Route
+          path="/*"
+          element={
+            <div>
+              <p>Oups Route not found, you are lost 😕</p>
               <Link to="/">Back to home 🏠</Link>
             </div>
           }

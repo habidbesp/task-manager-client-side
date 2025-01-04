@@ -1,8 +1,13 @@
 import Logo from "@/components/Logo";
-import { Outlet } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 export default function AuthLayout() {
+  const { data } = useAuth();
+
+  if (data) return <Navigate to="/" />;
+
   return (
     <>
       <div className="bg-gray-800 min-h-screen">

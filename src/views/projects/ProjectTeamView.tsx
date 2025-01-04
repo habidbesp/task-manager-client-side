@@ -9,7 +9,7 @@ import {
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { getProjectTeam, removeUserFromProject } from "@/api/TeamAPI";
 import AddMemberModal from "@/components/team/AddMemberModal";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { TeamMember } from "@/types/index";
 import { toast } from "react-toastify";
@@ -20,10 +20,12 @@ export default function ProjectTeamView() {
   const projectId = params.projectId!;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["projectId", projectId],
+    queryKey: ["projectTeam", projectId],
     queryFn: () => getProjectTeam(projectId),
     retry: false,
   });
+
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: removeUserFromProject,
@@ -31,6 +33,7 @@ export default function ProjectTeamView() {
       toast.error(error.message);
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["projectTeam"] });
       toast.success(data);
     },
   });
