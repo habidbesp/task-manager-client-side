@@ -16,9 +16,10 @@ type NavMenuProps = {
 
 export default function NavMenu({ name }: NavMenuProps) {
   const queryClient = useQueryClient();
+
   const logout = () => {
     localStorage.removeItem("AUTH_TOKEN");
-    queryClient.invalidateQueries({ queryKey: ["user"] });
+    queryClient.resetQueries({ queryKey: ["user"], exact: true });
   };
   return (
     <Popover className="relative">
