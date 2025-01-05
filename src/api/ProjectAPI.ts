@@ -35,10 +35,11 @@ export async function getProjects() {
 export async function getProjectById(id: Project["_id"]) {
   try {
     const { data } = await api.get(`/projects/${id}`);
-    const response = editProjectSchema.safeParse(data);
-    if (response.success) {
-      return response.data;
-    }
+    return data;
+    // const response = editProjectSchema.safeParse(data);
+    // if (response.success) {
+    //   return response.data;
+    // }
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);
@@ -46,11 +47,17 @@ export async function getProjectById(id: Project["_id"]) {
   }
 }
 
-export async function updateProject(formData: Project) {
+export async function updateProject({
+  projectId,
+  formData,
+}: {
+  projectId: Project["_id"];
+  formData: ProjectFormData;
+}) {
   try {
-    const { _id, projectName, clientName, description } = formData;
+    const { projectName, clientName, description } = formData;
 
-    const { data } = await api.put<string>(`/projects/${_id}`, {
+    const { data } = await api.put<string>(`/projects/${projectId}`, {
       projectName,
       clientName,
       description,

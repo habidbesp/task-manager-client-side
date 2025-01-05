@@ -77,7 +77,7 @@ export default function DashboardView() {
                         </p>
                       ) : (
                         <p className="font-bold text-xs uppercase bg-green-50 text-green-500 border-2 border-green-500 rounded-lg inline-block py-1 px-5">
-                          Team's Member
+                          Team Member
                         </p>
                       )}
                     </div>
