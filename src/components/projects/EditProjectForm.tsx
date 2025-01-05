@@ -47,8 +47,8 @@ export default function EditProjectForm({
 
   const handleForm = (formData: ProjectFormData) => {
     const data = {
-      _id: projectId,
-      ...formData,
+      projectId,
+      formData,
     };
     mutate(data);
   };
