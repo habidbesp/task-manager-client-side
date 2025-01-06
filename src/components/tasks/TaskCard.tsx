@@ -56,7 +56,7 @@ export default function TaskCard({ task, canEdit }: TaskCardParams) {
       <div className="flex shrink-0  gap-x-6">
         <Menu as="div" className="relative flex-none">
           <MenuButton className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
-            <span className="sr-only">opciones</span>
+            <span className="sr-only">options</span>
             <EllipsisVerticalIcon className="h-9 w-9" aria-hidden="true" />
           </MenuButton>
           <Transition
