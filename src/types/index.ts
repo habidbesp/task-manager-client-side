@@ -25,6 +25,17 @@ export type SetPassword = Pick<
   Auth,
   "password" | "password_confirmation" | "token"
 >;
+export type CheckPasswordForm = Pick<Auth, "password">;
+
+/** Profile */
+const changeProfilePassword = authSchema
+  .pick({
+    password: true,
+    password_confirmation: true,
+  })
+  .extend({ current_password: z.string() });
+
+export type ChangeProfilePassword = z.infer<typeof changeProfilePassword>;
 
 /** Users */
 export const userSchema = authSchema
@@ -32,6 +43,7 @@ export const userSchema = authSchema
   .extend({ _id: z.string() });
 
 export type User = z.infer<typeof userSchema>;
+export type UserProfileForm = Pick<User, "name" | "email">;
 
 /** Notes */
 export const noteSchema = z.object({
