@@ -6,20 +6,21 @@ import {
   useSensors,
   DragEndEvent,
 } from "@dnd-kit/core";
-import { Task } from "@/types/index";
+import { Project, TaskProject, TaskStatus } from "@/types/index";
 import TaskCard from "./TaskCard";
 import DropTask from "./DropTask";
 import { toast } from "react-toastify";
 import { updateStatus } from "@/api/TaskAPI";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 type TaskListProps = {
-  tasks: Task[];
+  tasks: TaskProject[];
   canEdit: boolean;
 };
 
 type GroupedTask = {
-  [key: string]: Task[];
+  [key: string]: TaskProject[];
 };
 
 const initialStatusGroups: GroupedTask = {
@@ -47,6 +48,9 @@ const colorTranslations: { [key: string]: string } = {
 };
 
 export default function TaskList({ tasks, canEdit }: TaskListProps) {
+  const params = useParams();
+  const projectId = params.projectId!;
+
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: updateStatus,
@@ -55,7 +59,6 @@ export default function TaskList({ tasks, canEdit }: TaskListProps) {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-      queryClient.invalidateQueries({ queryKey: ["task", taskId] });
       toast.success(data);
     },
   });
@@ -67,7 +70,6 @@ export default function TaskList({ tasks, canEdit }: TaskListProps) {
   }, initialStatusGroups);
 
   const touchSensor = useSensor(TouchSensor, {
-    // Press delay of 250ms, with tolerance of 5px of movement
     activationConstraint: {
       delay: 300,
       tolerance: 5,
@@ -84,6 +86,25 @@ export default function TaskList({ tasks, canEdit }: TaskListProps) {
   const handleDragEnd = (e: DragEndEvent) => {
     const { over, active } = e;
     if (over && over.id) {
+      const taskId = active.id.toString();
+      const status = over.id as TaskStatus;
+      mutate({ projectId, taskId, status });
+
+      queryClient.setQueryData(["project", projectId], (prevData: Project) => {
+        const updatedTask = prevData.tasks.map((task) => {
+          if (task._id === taskId) {
+            return {
+              ...task,
+              status,
+            };
+          }
+          return task;
+        });
+        return {
+          ...prevData,
+          tasks: updatedTask,
+        };
+      });
     }
   };
   return (

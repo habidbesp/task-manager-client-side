@@ -1,12 +1,15 @@
 import Logo from "@/components/Logo";
-import { useAuth } from "@/hooks/useAuth";
-import { Navigate, Outlet } from "react-router-dom";
+// import { useAuth } from "@/hooks/useAuth";
+import {
+  // Navigate,
+  Outlet,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 export default function AuthLayout() {
-  const { data } = useAuth();
+  // const { data } = useAuth();
 
-  if (data) return <Navigate to="/" />;
+  // if (data) return <Navigate to="/" />;
 
   return (
     <>

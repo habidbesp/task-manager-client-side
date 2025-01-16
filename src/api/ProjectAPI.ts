@@ -4,6 +4,7 @@ import {
   editProjectSchema,
   Project,
   ProjectFormData,
+  projectSchema,
 } from "@/types/index";
 import { isAxiosError } from "axios";
 
@@ -35,18 +36,22 @@ export async function getProjects() {
 export async function getProjectById(id: Project["_id"]) {
   try {
     const { data } = await api.get(`/projects/${id}`);
-    // console.log(data);
-
     const response = editProjectSchema.safeParse(data);
-    // if (response.success) {
-    //   return response.data;
-    // }
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
 
-    if (!response.success) {
-      console.log(response.error.issues);
-
-      response.error.issues;
-    } else {
+export async function getFullProjectsDetails(id: Project["_id"]) {
+  try {
+    const { data } = await api.get(`/projects/${id}`);
+    const response = projectSchema.safeParse(data);
+    if (response.success) {
       return response.data;
     }
   } catch (error) {
