@@ -1,4 +1,4 @@
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
 import DashboardView from "@/views/DashboardView";
 import CreateProjectView from "@/views/projects/CreateProjectView";
@@ -15,6 +15,7 @@ import ProjectTeamView from "./views/projects/ProjectTeamView";
 import ProfileView from "./views/profile/ProfileView";
 import ChangePasswordView from "./views/profile/ChangePasswordView";
 import ProfileLayout from "./layouts/ProfileLayout";
+import NotFound from "./views/404/NotFound";
 
 export default function Router() {
   return (
@@ -61,15 +62,9 @@ export default function Router() {
           }
         /> */}
 
-        <Route
-          path="/*"
-          element={
-            <div>
-              <p>Oups Route not found, you are lost 😕</p>
-              <Link to="/">Back to home 🏠</Link>
-            </div>
-          }
-        />
+        <Route element={<AuthLayout />}>
+          <Route path="*" element={<NotFound />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
