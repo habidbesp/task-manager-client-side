@@ -52,16 +52,6 @@ export default function Router() {
           <Route path="/auth/new-password" element={<NewPasswordView />} />
         </Route>
 
-        {/* <Route
-          path="/404"
-          element={
-            <div>
-              <p>Oups Route not found, you are lost 😕</p>
-              <Link to="/">Back to home 🏠</Link>
-            </div>
-          }
-        /> */}
-
         <Route element={<AuthLayout />}>
           <Route path="*" element={<NotFound />} />
         </Route>
